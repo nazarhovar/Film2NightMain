@@ -9,6 +9,8 @@ import com.example.Film2NightMain.services.FilmService;
 import com.example.Film2NightMain.services.SessionService;
 import com.example.Film2NightMain.services.UserService;
 import com.example.Film2NightMain.util.SessionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import lombok.*;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
+    private static final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);
     private final SessionRepository sessionRepository;
     private final FilmService filmService;
     private final UserService userService;
@@ -36,7 +39,7 @@ public class SessionServiceImpl implements SessionService {
         List<User> users = SessionUtil.getUsers(sessionDto.getUsers(), userService);
         session.setUsers(users);
 
-        System.out.println("Session created.");
+        logger.info("Session created.");
         return sessionRepository.save(session);
     }
 
@@ -53,13 +56,13 @@ public class SessionServiceImpl implements SessionService {
         List<User> users = SessionUtil.getUsers(sessionUpdateDto.getUsers(), userService);
         session.setUsers(users);
 
-        System.out.println("Session updated.");
+        logger.info("Session updated.");
         return sessionRepository.save(session);
     }
 
     public void cancelSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
-        System.out.println("Session deleted.");
+        logger.info("Session deleted.");
     }
 
     public Session addUserToSession(Long sessionId, Long userId) {

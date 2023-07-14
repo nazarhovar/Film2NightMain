@@ -16,16 +16,15 @@ public class SessionController {
     private final SessionServiceImpl sessionServiceImpl;
 
     @PostMapping("/session/create")
-
     public ResponseEntity<Session> createSession(@RequestBody SessionDto sessionDto) {
         return ResponseEntity.ok(sessionServiceImpl.createSession(sessionDto));
     }
 
     @PostMapping("/session/update/{sessionId}")
-    public Session updateSession(@PathVariable Long sessionId, @RequestBody SessionUpdateDto sessionUpdateDto) {
+    public ResponseEntity<Session> updateSession(@PathVariable Long sessionId, @RequestBody SessionUpdateDto sessionUpdateDto) {
         // User должен быть создателем
         sessionUpdateDto.setSessionId(sessionId);
-        return sessionServiceImpl.updateSession(sessionUpdateDto);
+        return ResponseEntity.ok(sessionServiceImpl.updateSession(sessionUpdateDto));
     }
 
     @DeleteMapping("/session/cancel/{sessionId}")
@@ -35,13 +34,13 @@ public class SessionController {
     }
 
     @PostMapping("/session/addUser/{sessionId}/{userId}")
-    public Session addUserToSession(@PathVariable Long sessionId, @PathVariable Long userId) {
-        return sessionServiceImpl.addUserToSession(sessionId, userId);
+    public ResponseEntity<Session> addUserToSession(@PathVariable Long sessionId, @PathVariable Long userId) {
+        return ResponseEntity.ok(sessionServiceImpl.addUserToSession(sessionId, userId));
     }
 
     @PostMapping("/session/removeUser/{sessionId}/{userId}")
-    public Session removeUserFromSession(@PathVariable Long sessionId, @PathVariable Long userId) {
-        return sessionServiceImpl.removeUserFromSession(sessionId, userId);
+    public ResponseEntity<Session> removeUserFromSession(@PathVariable Long sessionId, @PathVariable Long userId) {
+        return ResponseEntity.ok(sessionServiceImpl.removeUserFromSession(sessionId, userId));
     }
 
     @GetMapping("/session/allSessions")

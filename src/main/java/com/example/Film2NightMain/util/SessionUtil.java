@@ -18,6 +18,7 @@ public class SessionUtil {
                 users.add(user);
             }
         }
+
         return users;
     }
 
