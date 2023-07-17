@@ -17,34 +17,63 @@ public class SessionController {
 
     @PostMapping("/session/create")
     public ResponseEntity<Session> createSession(@RequestBody SessionDto sessionDto) {
-        return ResponseEntity.ok(sessionServiceImpl.createSession(sessionDto));
+        try {
+            Session session = sessionServiceImpl.createSession(sessionDto);
+            return ResponseEntity.ok(session);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating session", e);
+        }
     }
 
+    //user должен быть создателем
     @PostMapping("/session/update/{sessionId}")
     public ResponseEntity<Session> updateSession(@PathVariable Long sessionId, @RequestBody SessionUpdateDto sessionUpdateDto) {
-        // User должен быть создателем
-        sessionUpdateDto.setSessionId(sessionId);
-        return ResponseEntity.ok(sessionServiceImpl.updateSession(sessionUpdateDto));
+        try {
+            sessionUpdateDto.setSessionId(sessionId);
+            Session session = sessionServiceImpl.updateSession(sessionUpdateDto);
+            return ResponseEntity.ok(session);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating session", e);
+        }
     }
 
+    //user должен быть создателем
     @DeleteMapping("/session/cancel/{sessionId}")
     public void cancelSession(@PathVariable Long sessionId) {
-        // User должен быть создателем
-        sessionServiceImpl.cancelSession(sessionId);
+        try {
+            sessionServiceImpl.cancelSession(sessionId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting session", e);
+        }
     }
 
     @PostMapping("/session/addUser/{sessionId}/{userId}")
     public ResponseEntity<Session> addUserToSession(@PathVariable Long sessionId, @PathVariable Long userId) {
-        return ResponseEntity.ok(sessionServiceImpl.addUserToSession(sessionId, userId));
+        try {
+            Session session = sessionServiceImpl.addUserToSession(sessionId, userId);
+            return ResponseEntity.ok(session);
+        } catch (Exception e) {
+            throw new RuntimeException("Error adding user to session", e);
+        }
     }
 
     @PostMapping("/session/removeUser/{sessionId}/{userId}")
     public ResponseEntity<Session> removeUserFromSession(@PathVariable Long sessionId, @PathVariable Long userId) {
-        return ResponseEntity.ok(sessionServiceImpl.removeUserFromSession(sessionId, userId));
+        try {
+            Session session = sessionServiceImpl.removeUserFromSession(sessionId, userId);
+            return ResponseEntity.ok(session);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting user from session", e);
+        }
     }
 
     @GetMapping("/session/allSessions")
     public List<Session> getAllAvailableSessions() {
-        return sessionServiceImpl.getAllAvailableSessions();
+        try {
+            List<Session> sessions = sessionServiceImpl.getAllAvailableSessions();
+            return sessions;
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting list of available sessions", e);
+        }
     }
 }

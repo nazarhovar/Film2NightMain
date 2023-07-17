@@ -14,13 +14,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
+    private static final int VISITOR_COUNT = 4;
+    private static final int MAX_VISITOR_COUNT = 10;
+
     private static final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);
+
     private final SessionRepository sessionRepository;
     private final FilmService filmService;
     private final UserService userService;
@@ -29,9 +33,9 @@ public class SessionServiceImpl implements SessionService {
         Session session = new Session();
         session.setIsCanceled(false);
         session.setFilmId(filmService.findFilmById(sessionDto.getFilmId()));
-        session.setVisitorCount(4);
+        session.setVisitorCount(VISITOR_COUNT);
+        session.setMaxVisitorCount(MAX_VISITOR_COUNT);
         session.setStartTime(sessionDto.getStartTime());
-        session.setMaxVisitorCount(10);
 
         User creator = userService.findUserById(sessionDto.getCreatorId());
         session.setCreator(creator);
@@ -39,13 +43,17 @@ public class SessionServiceImpl implements SessionService {
         List<User> users = SessionUtil.getUsers(sessionDto.getUsers(), userService);
         session.setUsers(users);
 
-        logger.info("Session created.");
-        return sessionRepository.save(session);
+        Session createdSession = sessionRepository.save(session);
+
+        logger.info("Session created: {}", createdSession.getId());
+
+        return createdSession;
     }
 
     public Session updateSession(SessionUpdateDto sessionUpdateDto) {
-        Session session = sessionRepository.findById(sessionUpdateDto.getSessionId())
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+        Long sessionId = sessionUpdateDto.getSessionId();
+        Session session = SessionUtil.getSessionById(sessionRepository, sessionId);
+
         session.setFilmId(filmService.findFilmById(sessionUpdateDto.getFilmId()));
         session.setVisitorCount(sessionUpdateDto.getMaxVisitorCount());
         session.setStartTime(sessionUpdateDto.getStartTime());
@@ -56,19 +64,21 @@ public class SessionServiceImpl implements SessionService {
         List<User> users = SessionUtil.getUsers(sessionUpdateDto.getUsers(), userService);
         session.setUsers(users);
 
-        logger.info("Session updated.");
-        return sessionRepository.save(session);
+        Session updatedSession = sessionRepository.save(session);
+
+        logger.info("Session updated: {}", updatedSession.getId());
+
+        return updatedSession;
     }
 
     public void cancelSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
-        logger.info("Session deleted.");
+        logger.info("Session deleted: {}" , sessionId);
     }
 
     public Session addUserToSession(Long sessionId, Long userId) {
         User user = userService.findUserById(userId);
-        Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+        Session session = SessionUtil.getSessionById(sessionRepository, sessionId);
 
         SessionUtil.validateSessionNotCanceled(session);
         SessionUtil.validateSessionNotFull(session);
@@ -81,8 +91,7 @@ public class SessionServiceImpl implements SessionService {
 
     public Session removeUserFromSession(Long sessionId, Long userId) {
         User user = userService.findUserById(userId);
-        Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+        Session session = SessionUtil.getSessionById(sessionRepository, sessionId);
 
         SessionUtil.validateSessionNotCanceled(session);
         SessionUtil.validateUserInSession(session, user);
@@ -95,14 +104,9 @@ public class SessionServiceImpl implements SessionService {
 
     public List<Session> getAllAvailableSessions() {
         List<Session> allSessions = sessionRepository.findAll();
-        List<Session> availableSessions = new ArrayList<>();
 
-        for (Session session : allSessions) {
-            if (SessionUtil.isSessionAvailable(session)) {
-                availableSessions.add(session);
-            }
-        }
-
-        return availableSessions;
+        return allSessions.stream()
+                .filter(SessionUtil::isSessionAvailable)
+                .collect(Collectors.toList());
     }
 }
