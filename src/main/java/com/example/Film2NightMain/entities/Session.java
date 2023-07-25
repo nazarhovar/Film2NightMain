@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package com.example.Film2NightMain.util;
 
 import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.entities.User;
+import com.example.Film2NightMain.repositories.SessionRepository;
 import com.example.Film2NightMain.services.UserService;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class SessionUtil {
                 users.add(user);
             }
         }
+
         return users;
     }
 
@@ -43,5 +45,10 @@ public class SessionUtil {
         return !session.getIsCanceled()
                 && session.getVisitorCount() < session.getMaxVisitorCount()
                 && session.getStartTime().isAfter(LocalDateTime.now());
+    }
+
+    public static Session getSessionById(SessionRepository sessionRepository, Long sessionId) {
+        return sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
     }
 }

@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Film {
     @Id
     private Integer kinopoisk_id;
