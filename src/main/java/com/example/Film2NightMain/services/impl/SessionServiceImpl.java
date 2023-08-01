@@ -9,21 +9,20 @@ import com.example.Film2NightMain.services.FilmService;
 import com.example.Film2NightMain.services.SessionService;
 import com.example.Film2NightMain.services.UserService;
 import com.example.Film2NightMain.util.SessionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SessionServiceImpl implements SessionService {
     private static final int VISITOR_COUNT = 4;
     private static final int MAX_VISITOR_COUNT = 10;
-
-    private static final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);
 
     private final SessionRepository sessionRepository;
     private final FilmService filmService;
@@ -45,7 +44,7 @@ public class SessionServiceImpl implements SessionService {
 
         Session createdSession = sessionRepository.save(session);
 
-        logger.info("Session created: {}", createdSession.getId());
+        log.info("Session created: {}", createdSession.getId());
 
         return createdSession;
     }
@@ -66,14 +65,14 @@ public class SessionServiceImpl implements SessionService {
 
         Session updatedSession = sessionRepository.save(session);
 
-        logger.info("Session updated: {}", updatedSession.getId());
+        log.info("Session updated: {}", updatedSession.getId());
 
         return updatedSession;
     }
 
     public void cancelSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
-        logger.info("Session deleted: {}" , sessionId);
+        log.info("Session deleted: {}" , sessionId);
     }
 
     public Session addUserToSession(Long sessionId, Long userId) {
@@ -102,11 +101,18 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.save(session);
     }
 
-    public List<Session> getAllAvailableSessions() {
-        List<Session> allSessions = sessionRepository.findAll();
+    @Override
+    public Session findSessionById(Long sessionId) {
+        return sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Session not found"));
+    }
 
-        return allSessions.stream()
-                .filter(SessionUtil::isSessionAvailable)
-                .collect(Collectors.toList());
+    @Override
+    public Session saveSession(Session session) {
+        return sessionRepository.save(session);
+    }
+
+    public List<Session> getAllAvailableSessions() {
+        return sessionRepository.findAllAvailableSessions();
     }
 }

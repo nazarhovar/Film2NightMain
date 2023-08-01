@@ -5,6 +5,7 @@ import com.example.Film2NightMain.dto.SessionUpdateDto;
 import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.services.impl.SessionServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
@@ -12,9 +13,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class SessionController {
     private final SessionServiceImpl sessionServiceImpl;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/create")
     public ResponseEntity<Session> createSession(@RequestBody SessionDto sessionDto) {
         try {
@@ -25,7 +28,7 @@ public class SessionController {
         }
     }
 
-    //user должен быть создателем
+    @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/update/{sessionId}")
     public ResponseEntity<Session> updateSession(@PathVariable Long sessionId, @RequestBody SessionUpdateDto sessionUpdateDto) {
         try {
@@ -37,7 +40,7 @@ public class SessionController {
         }
     }
 
-    //user должен быть создателем
+    @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @DeleteMapping("/session/cancel/{sessionId}")
     public void cancelSession(@PathVariable Long sessionId) {
         try {
@@ -47,6 +50,7 @@ public class SessionController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/session/addUser/{sessionId}/{userId}")
     public ResponseEntity<Session> addUserToSession(@PathVariable Long sessionId, @PathVariable Long userId) {
         try {
@@ -57,6 +61,7 @@ public class SessionController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/session/removeUser/{sessionId}/{userId}")
     public ResponseEntity<Session> removeUserFromSession(@PathVariable Long sessionId, @PathVariable Long userId) {
         try {
@@ -67,6 +72,7 @@ public class SessionController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/session/allSessions")
     public List<Session> getAllAvailableSessions() {
         try {

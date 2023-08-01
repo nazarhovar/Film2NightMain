@@ -1,9 +1,11 @@
 package com.example.Film2NightMain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,4 +31,16 @@ public class Session {
     private User creator;
     @ManyToMany
     private List<User> users;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "session_rates",
+            joinColumns = @JoinColumn(name = "session_id"),
+            inverseJoinColumns = @JoinColumn(name = "rating_id")
+    )
+    private List<Rating> rates = new ArrayList<>();
+    @Column
+    private Integer numberOfRatings;
+    @Column
+    private Double averageRating;
 }

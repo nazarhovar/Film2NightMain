@@ -10,4 +10,6 @@ public interface SessionService {
     void cancelSession(Long sessionId);
     Session addUserToSession(Long sessionId, Long userId);
     Session removeUserFromSession(Long sessionId, Long userId);
+    Session findSessionById(Long sessionId);
+    Session saveSession(Session session);
 }
