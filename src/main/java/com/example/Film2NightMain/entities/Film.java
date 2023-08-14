@@ -3,6 +3,8 @@ package com.example.Film2NightMain.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Film {
     @Id
-    private Integer kinopoisk_id;
+    private Long kinopoisk_id;
     @Column
     private String name_origin;
     @Column
@@ -30,4 +32,6 @@ public class Film {
     private String last_sync;
     @Column
     private Boolean is_blocked;
+    @ManyToMany
+    private Set<Block> blockSet = new HashSet<>();
 }

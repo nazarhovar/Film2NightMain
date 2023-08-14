@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RatingDto {
-    private Long sessionId;
-    private double rating;
+public class BidDeleteFilmDto {
+    private long filmId;
+    private long blockId;
 }

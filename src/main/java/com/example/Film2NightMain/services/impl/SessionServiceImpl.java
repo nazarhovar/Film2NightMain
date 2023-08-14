@@ -1,7 +1,6 @@
 package com.example.Film2NightMain.services.impl;
 
-import com.example.Film2NightMain.dto.SessionDto;
-import com.example.Film2NightMain.dto.SessionUpdateDto;
+import com.example.Film2NightMain.dto.*;
 import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.entities.User;
 import com.example.Film2NightMain.repositories.SessionRepository;
@@ -10,12 +9,16 @@ import com.example.Film2NightMain.services.SessionService;
 import com.example.Film2NightMain.services.UserService;
 import com.example.Film2NightMain.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +75,7 @@ public class SessionServiceImpl implements SessionService {
 
     public void cancelSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
-        log.info("Session deleted: {}" , sessionId);
+        log.info("Session deleted: {}", sessionId);
     }
 
     public Session addUserToSession(Long sessionId, Long userId) {
@@ -81,6 +84,7 @@ public class SessionServiceImpl implements SessionService {
 
         SessionUtil.validateSessionNotCanceled(session);
         SessionUtil.validateSessionNotFull(session);
+        SessionUtil.validateUserNotInSession(session, user);
 
         session.getUsers().add(user);
         session.setVisitorCount(session.getVisitorCount() + 1);
@@ -112,7 +116,40 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.save(session);
     }
 
-    public List<Session> getAllAvailableSessions() {
-        return sessionRepository.findAllAvailableSessions();
+    public Page<Session> getAllAvailableSessions(Pageable pageable) {
+        return sessionRepository.findAllAvailableSessions(pageable);
     }
+
+    public List<Session> findAllSessionForYear() {
+        LocalDateTime yearBefore = LocalDateTime.now().minusYears(1);
+        log.info("All sessions for last year");
+        return sessionRepository.findAllSessionsForYear(yearBefore);
+    }
+
+    public Long countActiveSessionsForDay(int year, int month, int day) {
+        return sessionRepository.countActiveSessionsForDay(year, month, day);
+    }
+
+    public Long countActiveSessionsForMonth(int year, int month) {
+        return sessionRepository.countActiveSessionsForMonth(year, month);
+    }
+
+    public Long countActiveSessionsForWeek(int year, int week) {
+        return sessionRepository.countActiveSessionsForWeek(year, week);
+    }
+
+    public Long countActiveSessionsForYear(int year) {
+        return sessionRepository.countActiveSessionsForYear(year);
+    }
+
+    public List<RatingSessionDto> getSessionByScoreRating(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDateTime dateBegin = yearMonth.atDay(1).atTime(0, 0, 0);
+        LocalDateTime dateEnd = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+
+        List<RatingSessionDto> scoreAverageDtos = sessionRepository.getSessionByRatingScore(dateBegin, dateEnd);
+
+        return scoreAverageDtos;
+    }
+
 }

@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CommentService {
     Comment addCommentToSession(CommentDto commentDto);
+
     List<String> getCommentsForSession(Long sessionId);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RatingDto {
+public class RatingSessionDto {
     private Long sessionId;
     private double rating;
 }

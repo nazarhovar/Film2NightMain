@@ -24,17 +24,22 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment addCommentToSession(CommentDto commentDto) {
         Session session = sessionService.findSessionById(commentDto.getSessionId());
-        User user = userService.findUserById(commentDto.getUserId());
+        User user = userService.getUserIdFromSecurityContext();
 
         Comment newComment = new Comment();
         newComment.setSession(session);
         newComment.setUser(user);
         newComment.setText(commentDto.getCommentText());
+
         return commentRepository.save(newComment);
     }
 
     @Override
     public List<String> getCommentsForSession(Long sessionId) {
+        Session session = sessionService.findSessionById(sessionId);
+        if (session == null) {
+            throw new IllegalArgumentException("Session not found");
+        }
         List<Comment> comments = commentRepository.findAllBySessionId(sessionId);
         List<String> commentTexts = new ArrayList<>();
 
