@@ -13,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -24,15 +26,8 @@ public class FilmController {
     @ApiOperation(value = "Посмотреть фильм по id")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/film/{id}")
-    public ResponseEntity<Film> getFilmById(@PathVariable int id) {
-        Film film = filmServiceImpl.findFilmById(id);
-        if (film != null) {
-            log.info("Film found: {}", film.getName_origin());
-            return ResponseEntity.ok(film);
-        } else {
-            log.info("Film not found.");
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Optional<Film>> getFilmById(@PathVariable int id) {
+        return ResponseEntity.ok().body(filmServiceImpl.findFilmById(id));
     }
 
     @ApiOperation(value = "Посмотреть все фильмы")
@@ -57,3 +52,4 @@ public class FilmController {
         }
     }
 }
+

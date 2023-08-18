@@ -1,6 +1,7 @@
 package com.example.Film2NightMain.services.impl;
 
 import com.example.Film2NightMain.dto.*;
+import com.example.Film2NightMain.entities.Film;
 import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.entities.User;
 import com.example.Film2NightMain.repositories.SessionRepository;
@@ -34,7 +35,9 @@ public class SessionServiceImpl implements SessionService {
     public Session createSession(SessionDto sessionDto) {
         Session session = new Session();
         session.setIsCanceled(false);
-        session.setFilmId(filmService.findFilmById(sessionDto.getFilmId()));
+        Film film = filmService.findFilmById(sessionDto.getFilmId())
+                .orElseThrow(() -> new IllegalArgumentException("Film not found with ID: " + sessionDto.getFilmId()));
+        session.setFilmId(film);
         session.setVisitorCount(VISITOR_COUNT);
         session.setMaxVisitorCount(MAX_VISITOR_COUNT);
         session.setStartTime(sessionDto.getStartTime());
@@ -52,11 +55,12 @@ public class SessionServiceImpl implements SessionService {
         return createdSession;
     }
 
-    public Session updateSession(SessionUpdateDto sessionUpdateDto) {
-        Long sessionId = sessionUpdateDto.getSessionId();
+    public Session updateSession(SessionUpdateDto sessionUpdateDto, Long sessionId) {
         Session session = SessionUtil.getSessionById(sessionRepository, sessionId);
 
-        session.setFilmId(filmService.findFilmById(sessionUpdateDto.getFilmId()));
+        Film film = filmService.findFilmById(sessionUpdateDto.getFilmId())
+                .orElseThrow(() -> new IllegalArgumentException("Film not found with ID: " + sessionUpdateDto.getFilmId()));
+        session.setFilmId(film);
         session.setVisitorCount(sessionUpdateDto.getMaxVisitorCount());
         session.setStartTime(sessionUpdateDto.getStartTime());
 

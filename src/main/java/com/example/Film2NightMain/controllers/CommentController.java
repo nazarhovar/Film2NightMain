@@ -1,6 +1,7 @@
 package com.example.Film2NightMain.controllers;
 
 import com.example.Film2NightMain.dto.CommentDto;
+import com.example.Film2NightMain.dto.CommentResponseDto;
 import com.example.Film2NightMain.entities.Comment;
 import com.example.Film2NightMain.services.CommentService;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class CommentController {
     @ApiOperation(value = "Посмотреть все комментарии сеанса")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @GetMapping("/comment/{sessionId}")
-    public ResponseEntity<List<String>> getCommentsForSession(@PathVariable Long sessionId) {
+    public ResponseEntity<List<CommentResponseDto>> getCommentsForSession(@PathVariable Long sessionId) {
         return ResponseEntity.ok().body(commentService.getCommentsForSession(sessionId));
     }
 }

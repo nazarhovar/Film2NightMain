@@ -1,6 +1,7 @@
 package com.example.Film2NightMain.services.impl;
 
 import com.example.Film2NightMain.dto.CommentDto;
+import com.example.Film2NightMain.dto.CommentResponseDto;
 import com.example.Film2NightMain.entities.Comment;
 import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.entities.User;
@@ -11,6 +12,7 @@ import com.example.Film2NightMain.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,23 +32,30 @@ public class CommentServiceImpl implements CommentService {
         newComment.setSession(session);
         newComment.setUser(user);
         newComment.setText(commentDto.getCommentText());
+        newComment.setCreatedAt(LocalDateTime.now());
 
         return commentRepository.save(newComment);
     }
 
     @Override
-    public List<String> getCommentsForSession(Long sessionId) {
+    public List<CommentResponseDto> getCommentsForSession(Long sessionId) {
         Session session = sessionService.findSessionById(sessionId);
         if (session == null) {
             throw new IllegalArgumentException("Session not found");
         }
+
         List<Comment> comments = commentRepository.findAllBySessionId(sessionId);
-        List<String> commentTexts = new ArrayList<>();
+        List<CommentResponseDto> commentResponses = new ArrayList<>();
 
         for (Comment comment : comments) {
-            commentTexts.add(comment.getText());
+            String author = comment.getUser().getUsername();
+            LocalDateTime createdAt = comment.getCreatedAt();
+            String text = comment.getText();
+
+            CommentResponseDto commentResponse = new CommentResponseDto(author, createdAt, text);
+            commentResponses.add(commentResponse);
         }
 
-        return commentTexts;
+        return commentResponses;
     }
 }

@@ -75,7 +75,10 @@ public class BidServiceImpl implements BidService {
     public BidInfoDto createBidOnDeleteFilm(BidDeleteFilmDto bidDeleteFilmDto) {
         User user = userService.getUserIdFromSecurityContext();
         Session session = new Session();
-        session.setFilmId(filmService.findFilmById(bidDeleteFilmDto.getFilmId()));
+        Film film = filmService.findFilmById(bidDeleteFilmDto.getFilmId())
+                .orElseThrow(() -> new IllegalArgumentException("Film not found with ID: " + bidDeleteFilmDto.getFilmId()));
+
+        session.setFilmId(film);
         session.setIsCanceled(true);
         sessionService.saveSession(session);
 
@@ -86,7 +89,7 @@ public class BidServiceImpl implements BidService {
         bid.setSession(session);
         bidRepository.save(bid);
 
-        Film film = session.getFilmId();
+        session.getFilmId();
         Block block = blockService.findById(bidDeleteFilmDto.getBlockId());
         film.getBlockSet().add(block);
         filmService.saveFilm(film);

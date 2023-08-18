@@ -7,7 +7,7 @@ import com.example.Film2NightMain.entities.Session;
 public interface SessionService {
     Session createSession(SessionDto sessionDto);
 
-    Session updateSession(SessionUpdateDto sessionUpdateDto);
+    Session updateSession(SessionUpdateDto sessionUpdateDto, Long sessionId);
 
     void cancelSession(Long sessionId);
 

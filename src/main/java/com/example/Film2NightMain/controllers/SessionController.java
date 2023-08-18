@@ -39,13 +39,7 @@ public class SessionController {
     @PostMapping("/session/update/{sessionId}")
     public ResponseEntity<Session> updateSession(@PathVariable Long sessionId,
                                                  @RequestBody SessionUpdateDto sessionUpdateDto) {
-        try {
-            sessionUpdateDto.setSessionId(sessionId);
-            Session session = sessionServiceImpl.updateSession(sessionUpdateDto);
-            return ResponseEntity.ok(session);
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating session", e);
-        }
+        return ResponseEntity.ok().body(sessionServiceImpl.updateSession(sessionUpdateDto, sessionId));
     }
 
     @ApiOperation(value = "Удалить сеанс по id")
