@@ -25,27 +25,27 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public ResponseEntity<?> login(@RequestBody AuthDto requestDto) {
-            String username = requestDto.getUsername();
-            String password = requestDto.getPassword();
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
 
-            User user = userService.findByUsername(username);
+        User user = userService.findByUsername(username);
 
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Invalid username");
-            }
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username");
+        }
 
-            if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
-                String token = jwtTokenProvider.createToken(username, user.getRoles());
+        if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
+            String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-                AuthResponseDto responseDto = new AuthResponseDto();
-                responseDto.setUsername(username);
-                responseDto.setToken(token);
+            AuthResponseDto responseDto = new AuthResponseDto();
+            responseDto.setUsername(username);
+            responseDto.setToken(token);
 
-                return ResponseEntity.ok(responseDto);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Invalid password");
-            }
+            return ResponseEntity.ok(responseDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid password");
+        }
     }
 }

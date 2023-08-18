@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class SessionUpdateDto {
-    private Long sessionId;
     private int filmId;
     private int maxVisitorCount;
     private LocalDateTime startTime;

@@ -4,8 +4,9 @@ import com.example.Film2NightMain.entities.Session;
 import com.example.Film2NightMain.entities.User;
 import com.example.Film2NightMain.repositories.SessionRepository;
 import com.example.Film2NightMain.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,12 @@ public class SessionUtil {
         }
 
         return users;
+    }
+
+    public static void validateUserNotInSession(Session session, User user) {
+        if (session.getUsers().contains(user)) {
+            throw new IllegalArgumentException("User is already in the session.");
+        }
     }
 
     public static void validateSessionNotCanceled(Session session) {
@@ -41,14 +48,8 @@ public class SessionUtil {
         }
     }
 
-    public static boolean isSessionAvailable(Session session) {
-        return !session.getIsCanceled()
-                && session.getVisitorCount() < session.getMaxVisitorCount()
-                && session.getStartTime().isAfter(LocalDateTime.now());
-    }
-
     public static Session getSessionById(SessionRepository sessionRepository, Long sessionId) {
         return sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Session not found"));
     }
 }

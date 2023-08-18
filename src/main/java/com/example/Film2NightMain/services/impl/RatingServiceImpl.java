@@ -22,7 +22,7 @@ public class RatingServiceImpl implements RatingService {
 
     public Session rateSession(RatingDto ratingDto) {
         Session session = sessionService.findSessionById(ratingDto.getSessionId());
-        User user = userService.findUserById(ratingDto.getUserId());
+        User user = userService.getUserIdFromSecurityContext();
 
         double rating = ratingDto.getRating();
         if (rating >= 0 && rating <= 10) {
@@ -39,8 +39,8 @@ public class RatingServiceImpl implements RatingService {
 
             session.setAverageRating(newAverageRating);
             session.setNumberOfRatings(ratings.size());
-
             ratingRepository.save(newRating);
+
             return sessionService.saveSession(session);
         } else {
             throw new IllegalArgumentException("Rating value must be between 0 and 10");

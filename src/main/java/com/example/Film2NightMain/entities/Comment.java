@@ -3,6 +3,7 @@ package com.example.Film2NightMain.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,5 +20,5 @@ public class Comment {
     private Session session;
     @ManyToOne
     private User user;
-
+    private LocalDateTime createdAt;
 }
