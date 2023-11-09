@@ -1,6 +1,7 @@
 package com.example.Film2NightMain.controllers;
 
 import com.example.Film2NightMain.dto.AuthDto;
+import com.example.Film2NightMain.dto.RegisterDto;
 import com.example.Film2NightMain.services.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,13 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Аутентификация")
+@Api(tags = "Authentication")
 public class AuthController {
     private final AuthService authService;
 
-    @ApiOperation(value = "Аутентификация")
+    @ApiOperation(value = "Login")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthDto authDto) {
         return ResponseEntity.ok(authService.login(authDto));
+    }
+
+    @ApiOperation(value = "Register")
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody RegisterDto registerDto) {
+        return ResponseEntity.ok(authService.register(registerDto));
     }
 }

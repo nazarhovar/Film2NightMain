@@ -12,76 +12,76 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bid")
-@Api(tags = "Заявки")
+@Api(tags = "Bids")
 public class BidController {
     private final BidServiceImpl bidService;
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/addUser/create")
-    @ApiOperation("Создать заявку на участие в сеансе")
+    @ApiOperation("Create a request to participate in a session")
     public ResponseEntity<BidInfoDto> createBidOnSessionView(@RequestBody BidDto bidDto) {
         return ResponseEntity.ok().body(bidService.createBidOnAddUser(bidDto));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/addUser/create/approve/{id}")
-    @ApiOperation("Одобрить заявку на участие в сеансе")
+    @ApiOperation("Approve the request to participate in the session")
     public ResponseEntity<BidInfoDto> approveBidOnSessionView(@PathVariable Long id) {
         return ResponseEntity.ok().body(bidService.approveBidOnAddUser(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/addUser/create/reject/{id}")
-    @ApiOperation("Отклонить заявку на участие в сеансе")
+    @ApiOperation("Decline a session request")
     public ResponseEntity<BidInfoDto> rejectBidOnSessionView(@PathVariable Long id) {
         return ResponseEntity.ok().body(bidService.rejectBidOnAddUser(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/delete/{id}")
-    @ApiOperation("Создать заявку на удаление сессии")
+    @ApiOperation("Create a request to delete a session")
     public ResponseEntity<BidInfoDto> createBidOnSessionCancel(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok().body(bidService.createBidOnCancelSession(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/delete/approve/{id}")
-    @ApiOperation("Одобрить заявку на удаление сессии")
+    @ApiOperation("Approve the request to delete a session")
     public ResponseEntity<BidInfoDto> approveBidOnCancelSession(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok().body(bidService.approveBidOnCancelSession(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/film/delete")
-    @ApiOperation("Создать заявку на удаление фильма")
+    @ApiOperation("Create a request to remove a film")
     public ResponseEntity<BidInfoDto> createBidOnDeleteFilm(@RequestBody BidDeleteFilmDto bidDeleteFilmDto) {
         return ResponseEntity.ok().body(bidService.createBidOnDeleteFilm(bidDeleteFilmDto));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/film/delete/approve/{id}")
-    @ApiOperation("Одобрить заявку на удаление фильма")
+    @ApiOperation("Approve the request to remove the film")
     public ResponseEntity<BidInfoDto> approveBidOnDeleteFilm(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok().body(bidService.approveBidOnDeleteFilm(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/user/block")
-    @ApiOperation("Создать заявку на удаление юзера")
+    @ApiOperation("Create a request to delete a user")
     public ResponseEntity<BidDeleteUserDto> createBidOnBlockUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok().body(bidService.createBidOnBlockUser(userDto));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/user/block/approve/{id}")
-    @ApiOperation("Одобрить заявку на удаление юзера")
+    @ApiOperation("Approve the request to delete a user")
     public ResponseEntity<BidDeleteUserDto> approveBidOnBlockUser(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok().body(bidService.approveBidOnBlockUser(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/reject/{id}")
-    @ApiOperation("Отклонить заявку")
+    @ApiOperation("Reject request")
     public ResponseEntity<BidInfoDto> rejectBidByModerator(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok().body(bidService.rejectBidByModerator(id));
     }

@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Оценки")
+@Api(tags = "Rating")
 public class RatingController {
     private final RatingService ratingService;
 
-    @ApiOperation(value = "Присвоить оценку сеансу")
+    @ApiOperation(value = "Rate the session")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/rating/add")
     public ResponseEntity<Session> rateSession(@RequestBody RatingDto ratingDto) {
         return ResponseEntity.ok().body(ratingService.rateSession(ratingDto));
     }
 
-    @ApiOperation(value = "Средняя оценка сеанса")
+    @ApiOperation(value = "Average session rating")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @GetMapping("/rating/{sessionId}")
     public ResponseEntity<Double> getSessionRating(@PathVariable Long sessionId) {

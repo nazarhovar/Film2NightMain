@@ -14,18 +14,18 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Юзеры")
+@Api(tags = "Users")
 public class UserController {
     private final UserService userService;
 
-    @ApiOperation(value = "Все юзеры")
+    @ApiOperation(value = "All users")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @ApiOperation(value = "Найти юзера по id")
+    @ApiOperation(value = "Find user by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long id) {
