@@ -16,18 +16,18 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Комментарии")
+@Api(tags = "Comments")
 public class CommentController {
     private final CommentService commentService;
 
-    @ApiOperation(value = "Добавить комментарий к сеансу")
+    @ApiOperation(value = "Add a comment to the session")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/comment/add")
     public ResponseEntity<Comment> addCommentToSession(@RequestBody CommentDto commentDto) {
         return ResponseEntity.ok().body(commentService.addCommentToSession(commentDto));
     }
 
-    @ApiOperation(value = "Посмотреть все комментарии сеанса")
+    @ApiOperation(value = "View all session comments")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @GetMapping("/comment/{sessionId}")
     public ResponseEntity<List<CommentResponseDto>> getCommentsForSession(@PathVariable Long sessionId) {

@@ -19,18 +19,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api")
-@Api(tags = "Фильмы")
+@Api(tags = "Films")
 public class FilmController {
     private final FilmServiceImpl filmServiceImpl;
 
-    @ApiOperation(value = "Посмотреть фильм по id")
+    @ApiOperation(value = "View a movie by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/film/{id}")
     public ResponseEntity<Optional<Film>> getFilmById(@PathVariable int id) {
         return ResponseEntity.ok().body(filmServiceImpl.findFilmById(id));
     }
 
-    @ApiOperation(value = "Посмотреть все фильмы")
+    @ApiOperation(value = "View all films")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/films")
     public ResponseEntity<Page<Film>> getAllFilms(

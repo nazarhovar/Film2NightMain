@@ -18,11 +18,11 @@ import lombok.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Сеансы")
+@Api(tags = "Sessions")
 public class SessionController {
     private final SessionServiceImpl sessionServiceImpl;
 
-    @ApiOperation(value = "Создать сеанс")
+    @ApiOperation(value = "Create session")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/create")
     public ResponseEntity<Session> createSession(@RequestBody SessionDto sessionDto) {
@@ -34,7 +34,7 @@ public class SessionController {
         }
     }
 
-    @ApiOperation(value = "Обновить сеанс по id")
+    @ApiOperation(value = "Update session by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @PostMapping("/session/update/{sessionId}")
     public ResponseEntity<Session> updateSession(@PathVariable Long sessionId,
@@ -42,7 +42,7 @@ public class SessionController {
         return ResponseEntity.ok().body(sessionServiceImpl.updateSession(sessionUpdateDto, sessionId));
     }
 
-    @ApiOperation(value = "Удалить сеанс по id")
+    @ApiOperation(value = "Delete session by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR','USER')")
     @DeleteMapping("/session/cancel/{sessionId}")
     public void cancelSession(@PathVariable Long sessionId) {
@@ -53,7 +53,7 @@ public class SessionController {
         }
     }
 
-    @ApiOperation(value = "Добавить юзера к сеансу по id")
+    @ApiOperation(value = "Add a user to a session by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/session/addUser/{sessionId}/{userId}")
     public ResponseEntity<Session> addUserToSession(@PathVariable Long sessionId,
@@ -61,7 +61,7 @@ public class SessionController {
         return ResponseEntity.ok().body(sessionServiceImpl.addUserToSession(sessionId, userId));
     }
 
-    @ApiOperation(value = "Удалить юзера из сеанса по id")
+    @ApiOperation(value = "Remove user from session by id")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/session/removeUser/{sessionId}/{userId}")
     public ResponseEntity<Session> removeUserFromSession(@PathVariable Long sessionId,
@@ -69,7 +69,7 @@ public class SessionController {
         return ResponseEntity.ok().body(sessionServiceImpl.removeUserFromSession(sessionId, userId));
     }
 
-    @ApiOperation(value = "Посмотреть все сеансы")
+    @ApiOperation(value = "View all sessions")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/session/allSessions")
     public Page<Session> getAllAvailableSessions(

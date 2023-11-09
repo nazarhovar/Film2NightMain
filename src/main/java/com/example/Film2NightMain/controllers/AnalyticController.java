@@ -19,26 +19,26 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Статистика")
+@Api(tags = "Statistics")
 public class AnalyticController {
     private final SessionServiceImpl sessionServiceImpl;
     private final UserService userService;
 
-    @ApiOperation(value = "Сенасы за последний год")
+    @ApiOperation(value = "All sessions for last year")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/session/lastYear")
     public ResponseEntity<List<Session>> getAllSessionForYear() {
         return ResponseEntity.ok().body(sessionServiceImpl.findAllSessionForYear());
     }
 
-    @ApiOperation(value = "Количество активных сенасов за год")
+    @ApiOperation(value = "Number of active sessions per year")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/session/count/active/{year}")
     public ResponseEntity getActiveSessionsForYear(@PathVariable(name = "year") int year) {
         return ResponseEntity.ok().body(sessionServiceImpl.countActiveSessionsForYear(year));
     }
 
-    @ApiOperation(value = "Количество активных сенасов за месяц")
+    @ApiOperation(value = "Number of active sessions per month")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/session/count/active/month/{year}/{month}")
     public ResponseEntity getSessionsForMonth(@PathVariable(name = "year") int year,
@@ -46,7 +46,7 @@ public class AnalyticController {
         return ResponseEntity.ok().body(sessionServiceImpl.countActiveSessionsForMonth(year, month));
     }
 
-    @ApiOperation(value = "Количество активных сенасов за неделю")
+    @ApiOperation(value = "Number of active sessions per week")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/sessions/count/active/week/{year}/{week}")
     public ResponseEntity getSessionsForWeek(@PathVariable(name = "year") int year,
@@ -54,7 +54,7 @@ public class AnalyticController {
         return ResponseEntity.ok().body(sessionServiceImpl.countActiveSessionsForWeek(year, week));
     }
 
-    @ApiOperation(value = "Количество активных сенасов за день")
+    @ApiOperation(value = "Number of active sessions per day")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/sessions/count/active/day/{year}/{month}/{day}")
     public ResponseEntity getSessionsForDay(@PathVariable(name = "year") int year,
@@ -63,7 +63,7 @@ public class AnalyticController {
         return ResponseEntity.ok().body(sessionServiceImpl.countActiveSessionsForDay(year, month, day));
     }
 
-    @ApiOperation(value = "Рейтинг сеансов по оценкам за месяц")
+    @ApiOperation(value = "Rating of sessions based on monthly ratings")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/sessions/rating/{year}/{month}")
     public ResponseEntity<List<RatingSessionDto>> getSessionByScoreRating(
@@ -72,14 +72,14 @@ public class AnalyticController {
         return ResponseEntity.ok().body(sessionServiceImpl.getSessionByScoreRating(year, month));
     }
 
-    @ApiOperation(value = "Количество активных юзеров за год")
+    @ApiOperation(value = "Number of active users per year")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/users/active/year/{year}")
     public ResponseEntity getActiveUserForYear(@PathVariable(name = "year") Integer year) {
         return ResponseEntity.ok().body(userService.countActiveUsersForYear(year));
     }
 
-    @ApiOperation(value = "Количество активных юзеров за месяц")
+    @ApiOperation(value = "Number of active users per month")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/users/active/month/{year}/{month}")
     public ResponseEntity getActiveUserForMonth(@PathVariable(name = "year") Integer year,
@@ -87,7 +87,7 @@ public class AnalyticController {
         return ResponseEntity.ok().body(userService.countActiveUsersForMonth(year, month));
     }
 
-    @ApiOperation(value = "Количество активных юзеров за неделю")
+    @ApiOperation(value = "Number of active users per week")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/users/active/week/{year}/{month}/{week}")
     public ResponseEntity getActiveUserForWeek(@PathVariable(name = "year") Integer year,
@@ -96,7 +96,7 @@ public class AnalyticController {
         return ResponseEntity.ok().body(userService.countActiveUsersForWeek(year, month, week));
     }
 
-    @ApiOperation(value = "Количество активных юзеров за день")
+    @ApiOperation(value = "Number of active users per day")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @GetMapping("/users/active/day/{year}/{month}/{day}")
     public ResponseEntity getActiveUserForDay(@PathVariable(name = "year") Integer year,

@@ -53,6 +53,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByUsernameRegister(String username) {
+        log.info("Get user {} ", username);
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     public User getUserIdFromSecurityContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(authentication.getName());

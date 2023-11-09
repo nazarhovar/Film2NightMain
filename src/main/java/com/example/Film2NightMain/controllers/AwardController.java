@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "Награды")
+@Api(tags = "Awards")
 public class AwardController {
     public final AwardService awardService;
 
-    @ApiOperation(value = "Присвоить награду")
+    @ApiOperation(value = "Assign a reward")
     @PreAuthorize("hasAnyAuthority('ADMIN','MODERATOR')")
     @PostMapping("/award/add")
     public ResponseEntity setAward(@RequestBody AwardDto awardDto) {
