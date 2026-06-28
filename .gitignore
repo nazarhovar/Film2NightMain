@@ -1,0 +1,22 @@
+# Application secrets
+**/application.properties
+
+# Maven build output
+target/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+.settings/
+.project
+.classpath
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+*.err
