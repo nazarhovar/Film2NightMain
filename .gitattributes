@@ -1,0 +1,7 @@
+# Hide frontend files from language stats
+static/js/* linguist-documentation
+static/css/* linguist-documentation
+static/html/* linguist-documentation
+*.js linguist-documentation
+*.css linguist-documentation
+*.html linguist-documentation
